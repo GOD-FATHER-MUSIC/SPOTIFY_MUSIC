@@ -50,7 +50,7 @@ async def init():
         pass
     await BABY.decorators()
     LOGGER("BABYMUSIC").info(
-        "BABY Music Bot Started Successfully"
+        "Bot Started Successfully 🎉 ©️ | @YouTubeVCBoT |"
     )
     await idle()
     await app.stop()
