@@ -9,10 +9,10 @@ from pyrogram import filters
 load_dotenv()
 # ------------------------------------
 # -----------------------------------------------------
-API_ID = int(getenv("API_ID", "0"))
-API_HASH = getenv("API_HASH", "0")
+API_ID = int(getenv("API_ID", "16457832"))
+API_HASH = getenv("API_HASH", "3030874d0befdb5d05597deacc3e83ab")
 # ------------------------------------------------------
-BOT_TOKEN = getenv("BOT_TOKEN", "0")
+BOT_TOKEN = getenv("BOT_TOKEN", "7062994457:AAHgASSfZw0Rlb99yXFBDnaMsMUT-aEdGI4")
 # -------------------------------------------------------
 OWNER_USERNAME = getenv("OWNER_USERNAME","@UTTAM470")
 # --------------------------------------------------------
@@ -44,10 +44,10 @@ DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", 17000))
 # ----------------------------------------------------------------
 
 # ----------------------------------------------------------------
-LOGGER_ID = int(getenv("LOGGER_ID", "0"))
+LOGGER_ID = int(getenv("LOGGER_ID", "-1002014882444"))
 # ----------------------------------------------------------------
 # ----------------------------------------------------------------
-OWNER_ID = int(getenv("OWNER_ID", "0"))
+OWNER_ID = int(getenv("OWNER_ID", "6657539971"))
 # -----------------------------------------------------------------
 # -----------------------------------------------------------------
 # config.py
@@ -125,7 +125,7 @@ TG_VIDEO_FILESIZE_LIMIT = int(getenv("TG_VIDEO_FILESIZE_LIMIT", "5242880000"))
 # ------------------------------------
 # ------------------------------------
 # ------------------------------------
-STRING1 = getenv("STRING_SESSION", "")
+STRING1 = getenv("STRING_SESSION", "BQD7IGgAfWtD41eVMDo48tW_V_b3ZzUJDsW54YN9dahUB9UHUfJREaA9Rf-hLNfTgFBNArvVnWzNHu3KRK3Hc7P5gqrGXqj-zCfejUfHTod46zL5I948A6ZPdq6cp_dutBUqRTLZChWMn6HuUETpTClLVMsKsZIZkmgB3FZELg7CcEpS4GuicrOXyd2zPPMH89qHa4oVDt8EDgu_u6oLiB9ucNzGFSZZHerfh5IyKa4TlQHts8PwtuWeDr0l-cpC6x9OROhtPd_i0gc0LboVOz-ff4tALfrHiDeI4ysn8W-RjVUUIKh01LVb1YjteysdgozsGspmjHsl4MHzkvY-UOX1DrvFgAAAAAHoy4nOAA")
 BANNED_USERS = filters.user()
 adminlist = {}
 lyrical = {}
