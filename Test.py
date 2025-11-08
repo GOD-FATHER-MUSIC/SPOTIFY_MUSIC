@@ -216,18 +216,15 @@ async def stop_cmd(_, m: Message):
     await m.reply_text("⏹ Stopped and cleared queue.")
 
 # ---------------- STARTUP ----------------
-@bot.on_startup()
-async def startup(client):
+# ---------------- STARTUP ----------------
+async def start_all():
     print("🛠 Debug: Starting user and voice client...")
     await user.start()
     await vc.start()
     print("✅ User & PyTgCalls started successfully!")
-    if OWNER_ID:
-        try:
-            await client.send_message(OWNER_ID, "🚀 Music Bot started successfully!")
-        except Exception as e:
-            print("🛠 Debug: Cannot DM owner:", e)
 
 # ---------------- RUN BOT ----------------
-print("🚀 Starting bot...")
-bot.run()
+if __name__ == "__main__":
+    asyncio.get_event_loop().run_until_complete(start_all())
+    print("🚀 Starting bot...")
+    bot.run()
