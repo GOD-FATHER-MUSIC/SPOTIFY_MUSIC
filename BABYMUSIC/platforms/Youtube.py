@@ -16,7 +16,7 @@ import random
 import logging
 import aiohttp
 import config
-from config import API_URL
+from config import BASE_URL, API_KEY
 from urllib.parse import urlparse
 
 def cookie_txt_file():
@@ -42,7 +42,7 @@ async def download_song(link: str):
     loop = asyncio.get_running_loop()
     def get_url():
         try:
-            res = requests.get(f"{API_URL}/song?query={vidid}").json()
+            res = requests.get(f"{BASE_URL}/api/song?query={vidid}&api={API_KEY}").json()
             return res
         except Exception as e:
             print(f"❌ API error: {e}")
@@ -69,7 +69,7 @@ async def download_video(link: str):
     loop = asyncio.get_running_loop()
     def get_url():
         try:
-            res = requests.get(f"{API_URL}/video?query={vidid}").json()
+            res = requests.get(f"{BASE_URL}/api/song?query={vidid}&api={API_KEY}").json()
             return res
         except Exception as e:
             print(f"❌ API error: {e}")
