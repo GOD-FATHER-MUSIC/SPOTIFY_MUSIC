@@ -69,7 +69,7 @@ async def download_video(link: str):
     loop = asyncio.get_running_loop()
     def get_url():
         try:
-            res = requests.get(f"{BASE_URL}/api/song?query={vidid}&api={API_KEY}").json()
+            res = requests.get(f"{BASE_URL}/api/video?query={vidid}&api={API_KEY}").json()
             return res
         except Exception as e:
             print(f"❌ API error: {e}")
