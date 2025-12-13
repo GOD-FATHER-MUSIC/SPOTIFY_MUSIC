@@ -89,7 +89,6 @@ async def download_video(link: str):
         raise
 
 
-
 async def check_file_size(link):
     async def get_format_info(link):
         cookie_file = cookie_txt_file()
@@ -124,18 +123,16 @@ async def check_file_size(link):
     
     formats = info.get('formats', [])
     if not formats:
-              print("No formats fo
-               etur
+        print("No formats found.")
+        return None
     
-    total_size = ize = parseformatso
-    )
-     total_size
+    total_size = parse_size(formats)
+    return total_size
 
-size
- asy c def shelcmdm:
-    proc = roc = asyncio.yncio.create_subprocess_
+async def shell_cmd(cmd):
+    proc = await asyncio.create_subprocess_shell(
         cmd,
-        stdout=asyncio.yncio.subp.oces,
+        stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
     out, errorz = await proc.communicate()
