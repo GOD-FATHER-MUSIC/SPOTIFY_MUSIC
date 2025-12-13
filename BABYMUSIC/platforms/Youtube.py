@@ -15,6 +15,8 @@ import glob
 import random
 import logging
 import aiohttp
+from config import LOGGER_ID
+from BABYMUSIC import app
 import config
 from config import BASE_URL, API_KEY
 from urllib.parse import urlparse
@@ -31,33 +33,61 @@ def cookie_txt_file():
 
 # ---------- AUDIO ----------
 async def download_song(link: str):
-    vid = link.split("v=")[-1].split("&")[0]
-    os.makedirs("downloads", exist_ok=True)
-    for ext in ["mp3", "m4a", "webm"]:
-        path = f"downloads/{vid}.{ext}"
-        if os.path.exists(path):
-            return path
-    loop = asyncio.get_running_loop()
-    fetch = lambda: requests.get(f"{BASE_URL}/api/song?query={vid}&api={API_KEY}").json()
-    res = await loop.run_in_executor(None, fetch)
-    if not res:
-        raise Exception("API Error")
-    return res.get("stream") or Exception("No stream found")
+    try:
+        vid = link.split("v=")[-1].split("&")[0]
+        os.makedirs("downloads", exist_ok=True)
+        for ext in ["mp3", "m4a", "webm"]:
+            path = f"downloads/{vid}.{ext}"
+            if os.path.exists(path):
+                return path
+        loop = asyncio.get_running_loop()
+        fetch = lambda: requests.get(
+            f"{BASE_URL}/api/song?query={vid}&api={API_KEY}",
+            timeout=15
+        ).json()
+        res = await loop.run_in_executor(None, fetch)
+        if not res or not res.get("stream"):
+            raise Exception("Song API se stream nahi mili")
+        return res["stream"]
+    except Exception as e:
+        await app.send_message(
+            LOGGER_ID,
+            f"❌ **Song Download Error**\n\n"
+            f"🔗 Link: `{link}`\n"
+            f"🆔 Video ID: `{vid}`\n"
+            f"⚠️ Error: `{e}`"
+        )
+        raise
+
 
 # ---------- VIDEO ----------
 async def download_video(link: str):
-    vid = link.split("v=")[-1].split("&")[0]
-    os.makedirs("downloads", exist_ok=True)
-    for ext in ["mp4", "webm", "mkv"]:
-        path = f"downloads/{vid}.{ext}"
-        if os.path.exists(path):
-            return path
-    loop = asyncio.get_running_loop()
-    fetch = lambda: requests.get(f"{BASE_URL}/api/video?query={vid}&api={API_KEY}").json()
-    res = await loop.run_in_executor(None, fetch)
-    if not res:
-        raise Exception("API Error")
-    return res.get("stream") or Exception("No stream found")
+    try:
+        vid = link.split("v=")[-1].split("&")[0]
+        os.makedirs("downloads", exist_ok=True)
+        for ext in ["mp4", "webm", "mkv"]:
+            path = f"downloads/{vid}.{ext}"
+            if os.path.exists(path):
+                return path
+        loop = asyncio.get_running_loop()
+        fetch = lambda: requests.get(
+            f"{BASE_URL}/api/video?query={vid}&api={API_KEY}",
+            timeout=15
+        ).json()
+        res = await loop.run_in_executor(None, fetch)
+        if not res or not res.get("stream"):
+            raise Exception("Video API se stream nahi mili")
+        return res["stream"]
+    except Exception as e:
+        await app.send_message(
+            LOGGER_ID,
+            f"❌ **Video Download Error**\n\n"
+            f"🔗 Link: `{link}`\n"
+            f"🆔 Video ID: `{vid}`\n"
+            f"⚠️ Error: `{e}`"
+        )
+        raise
+
 
 
 async def check_file_size(link):
@@ -94,16 +124,18 @@ async def check_file_size(link):
     
     formats = info.get('formats', [])
     if not formats:
-        print("No formats found.")
-        return None
+              print("No formats fo
+               etur
     
-    total_size = parse_size(formats)
-    return total_size
+    total_size = ize = parseformatso
+    )
+     total_size
 
-async def shell_cmd(cmd):
-    proc = await asyncio.create_subprocess_shell(
+size
+ asy c def shelcmdm:
+    proc = roc = asyncio.yncio.create_subprocess_
         cmd,
-        stdout=asyncio.subprocess.PIPE,
+        stdout=asyncio.yncio.subp.oces,
         stderr=asyncio.subprocess.PIPE,
     )
     out, errorz = await proc.communicate()
