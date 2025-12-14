@@ -37,29 +37,37 @@ def cookie_txt_file():
 async def download_song(link: str):
     vid = link.split("v=")[-1].split("&")[0]
     os.makedirs("downloads", exist_ok=True)
+
     for ext in ["mp3", "m4a", "webm"]:
         path = f"downloads/{vid}.{ext}"
         if os.path.exists(path):
             return path
+
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"{BASE_URL}/api/song?query={vid}&api={API_KEY}"
             ) as resp:
                 res = await resp.json()
+
             if not res or not res.get("stream"):
                 raise Exception("Song stream not found")
+
             stream_url = res["stream"]
+
             for _ in range(60):
                 async with session.get(stream_url) as r:
                     if r.status == 200:
                         return stream_url
-                    elif r.status in (202, 404):
+                    elif r.status == 202:
                         await asyncio.sleep(2)
-                        continue
+                    elif r.status in (204, 404):
+                        await asyncio.sleep(2)
                     else:
                         raise Exception(f"Stream failed ({r.status})")
+
             raise Exception("Song processing timeout")
+
     except Exception as e:
         await app.send_message(
             LOGGER_ID,
