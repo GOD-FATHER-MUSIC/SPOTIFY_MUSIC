@@ -82,6 +82,7 @@ async def download_video(link: str):
     vid = link.split("v=")[-1].split("&")[0]
     os.makedirs("downloads", exist_ok=True)
 
+    # Local cache check
     for ext in ["mp4", "webm", "mkv"]:
         path = f"downloads/{vid}.{ext}"
         if os.path.exists(path):
@@ -89,6 +90,7 @@ async def download_video(link: str):
 
     try:
         async with aiohttp.ClientSession() as session:
+            # API call for stream URL
             async with session.get(
                 f"{BASE_URL}/api/video?query={vid}&api={API_KEY}"
             ) as resp:
@@ -99,27 +101,39 @@ async def download_video(link: str):
 
             stream_url = res["stream"]
 
-            for _ in range(90):
-                async with session.get(stream_url) as r:
-                    if r.status == 200:
+            # ✅ GET + Range (HEAD alternative)
+            for attempt in range(90):
+                async with session.get(
+                    stream_url,
+                    headers={"Range": "bytes=0-0"}
+                ) as r:
+                    if r.status in (200, 206):
+                        print(f"✅ Video ready after {attempt + 1} attempts")
                         return stream_url
+
                     elif r.status == 202:
                         await asyncio.sleep(3)
+                        continue
+
                     elif r.status in (204, 404):
                         await asyncio.sleep(3)
-                    else:
-                        raise Exception(f"Stream failed ({r.status})")
+                        continue
 
-            raise Exception("Video processing timeout")
+                    else:
+                        print(f"Attempt {attempt + 1}: Status {r.status}")
+                        await asyncio.sleep(3)
+
+            raise Exception("Video processing timeout (90 attempts)")
 
     except Exception as e:
         await app.send_message(
             LOGGER_ID,
             f"❌ **Video API Error**\n\n"
             f"🔗 `{link}`\n"
-            f"⚠️ `{e}`"
+            f"⚠️ `{str(e)[:100]}`"
         )
         raise
+
 
 
 
