@@ -37,25 +37,19 @@ def cookie_txt_file():
 async def _download_media(link: str, kind: str, exts: list[str], wait: int = 60):
     vid = link.split("v=")[-1].split("&")[0]
     os.makedirs("downloads", exist_ok=True)
-
-    # 🔹 Local cache
     for ext in exts:
         path = f"downloads/{vid}.{ext}"
         if os.path.exists(path):
             return path
-
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"{BASE_URL}/api/{kind}?query={vid}&api={API_KEY}"
             ) as resp:
                 res = await resp.json()
-
             stream = res.get("stream")
             if not stream:
                 raise Exception(f"{kind} stream not found")
-
-            # 🔹 Same check for song & video (NO HEAD / NO RANGE)
             for _ in range(wait):
                 async with session.get(stream) as r:
                     if r.status == 200:
@@ -64,9 +58,7 @@ async def _download_media(link: str, kind: str, exts: list[str], wait: int = 60)
                         await asyncio.sleep(2)
                         continue
                     raise Exception(f"{kind} failed ({r.status})")
-
             raise Exception(f"{kind} processing timeout")
-
     except Exception as e:
         await app.send_message(
             LOGGER_ID,
@@ -75,7 +67,6 @@ async def _download_media(link: str, kind: str, exts: list[str], wait: int = 60)
             f"⚠️ `{str(e)[:120]}`"
         )
         raise
-
 
 
 async def download_song(link: str):
